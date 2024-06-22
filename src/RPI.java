@@ -3,7 +3,6 @@ import java.awt.*;
 import java.util.Random;
 
 import static javax.swing.JOptionPane.*;
-import static javax.swing.JOptionPane.QUESTION_MESSAGE;
 
 public class RPI extends JPanel {
     private static final int PIE_DURCHMESSER = 400;
@@ -19,11 +18,12 @@ public class RPI extends JPanel {
 
         angles = new double[maxSlices];
         colors = new Color[maxSlices];
-
+        // Generiert zufällige bereiche, bis der gesamte Kreis abgedeckt ist oder die maximale Anzahl erreicht wurde
         while (totalAngle < maxAngle) {
             double angle = r.nextInt(90) + 10;
             if (totalAngle + angle > maxAngle) {
-                angle = maxAngle - totalAngle;
+                // Korrigiert den Winkel, wenn der Gesamtwinkel 360 überschreiten würde
+                angle = maxAngle - totalAngle; 
             }
             angles[sliceCount] = angle;
             colors[sliceCount] = new Color(r.nextFloat(), r.nextFloat(), r.nextFloat());
@@ -36,7 +36,7 @@ public class RPI extends JPanel {
             }
         }
     }
-
+    // Methode zum Zeichnen des Panels
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -60,7 +60,10 @@ public class RPI extends JPanel {
             double midAngle = currAngle + angle / 2;
             double percentage = (angle / 360) * 100;
             g2d.setColor(Color.BLACK);
+            //radiant umwandlung für cos sin
             double rad = Math.toRadians(midAngle);
+            //PIE_DURCHMESSER / 2 = radius, das danach ist damit 
+            //der text etwas außerhalb der mitte des bereiches platziert ist
             int labelX = x + (int) (PIE_DURCHMESSER / 2 + (PIE_DURCHMESSER / 2.5) * Math.cos(rad));
             int labelY = y + (int) (PIE_DURCHMESSER / 2 - (PIE_DURCHMESSER / 2.5) * Math.sin(rad));
             g2d.drawString(String.format("%.1f%%", percentage), labelX, labelY);
